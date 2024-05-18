@@ -1,8 +1,8 @@
 ---
 import GlobalStyles from "@components/GlobalStyles.astro";
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import '@fontsource/josefin-sans/400.css';
+import '@fontsource/josefin-sans/500.css';
+import '@fontsource/josefin-sans/700.css';
 import ImageWrapper from "@components/misc/ImageWrapper.astro";
 
 import {pathsEqual} from "@utils/url-utils";
@@ -12,14 +12,16 @@ import {Favicon} from "../types/config";
 import {defaultFavicons} from "../constants/icon";
 import {LIGHT_MODE, DARK_MODE, AUTO_MODE, DEFAULT_THEME} from "../constants/constants";
 import {url} from "../utils/url-utils";
+import { SITE_URL } from "../constants/constants";
 
 interface Props {
 	title: string;
 	banner: string;
 	description?: string;
+	ogImage?: string;
 }
-
-let { title, banner, description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+let { title, banner, description, ogImage= `${SITE_URL}/opengraph-image.jpg` } = Astro.props;
 
 const isHomePage = pathsEqual(Astro.url.pathname, '/');
 
@@ -82,6 +84,12 @@ const siteLang = siteConfig.lang.replace('_', '-')
 		<meta name="description" content={description || pageTitle}>
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content={title} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:description" content={description} />
+		<meta property="og:locale" content="en_GB" />
 		{favicons.map(favicon => (
 			<link rel="icon"
 				  href={favicon.src.startsWith('/') ? url(favicon.src) : favicon.src}
@@ -178,8 +186,8 @@ import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
 // (async function() {
 // 	try {
 // 		await Promise.all([
-// 			document.fonts.load("400 1em Roboto"),
-// 			document.fonts.load("700 1em Roboto"),
+// 			document.fonts.load("400 1em josefin-sans"),
+// 			document.fonts.load("700 1em josefin-sans"),
 // 		]);
 // 		document.body.classList.remove("hidden");
 // 	} catch (error) {
@@ -323,6 +331,19 @@ if (window.swup.hooks) {
 }
 
 </script>
+
+<script>
+    (function () {
+        window.counterscale = {
+            q: [["set", "siteId", "blogzinecasa2024410"], ["trackPageview"]],
+        };
+    })();
+</script>
+<script
+    id="counterscale-script"
+    src="https://counterscale.zmoualhi.workers.dev/tracker.js"
+    defer
+></script>
 
 <style is:global lang="stylus">
 #banner-wrapper
